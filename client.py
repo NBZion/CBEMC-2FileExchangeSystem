@@ -18,9 +18,16 @@ def receive_messages():
                 connected = False
                 break
 
-            print(f"{message}")
+            # Fix CLI problem with multithreading
+            sys.stdout.write("\033[2K\r")
+
+            print(f"\n{message}")
+
+            sys.stdout.write(">> ")
+            sys.stdout.flush()
         except Exception as e:
             if connected:
+                sys.stdout.write("\033[2K\r")
                 print(f"\n[Error] Connection lost: {e}")
             connected = False
             break
