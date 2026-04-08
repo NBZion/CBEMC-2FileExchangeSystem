@@ -26,14 +26,16 @@ def handle_client(conn, addr):
                 break
 
             mSplit = message.split(" ")
-            command = mSplit[1]
+            command = mSplit[0]
             args = mSplit[1] if len(mSplit) > 1 else ""
 
             match command:
                 case "disconnect":
                     conn.send("disconnect success".encode())
                     connected = False
-
+                case "dir":
+                    for dir in os.listdir(SERVER_STORAGE_DIR):
+                        conn.send(dir.encode())
         except Exception as e:
             print(f"[ERROR] {addr}: {e}")
             break

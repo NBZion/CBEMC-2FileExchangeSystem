@@ -83,6 +83,8 @@ def start_client():
                     connected = False
                     client_socket.close()
                     print("Connection closed. Thank you!")
+                case "/dir":
+                    client_socket.send("dir".encode())
         except KeyboardInterrupt:
             if connected:
                 client_socket.send("disconnect".encode())
