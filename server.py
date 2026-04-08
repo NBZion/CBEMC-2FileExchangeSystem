@@ -36,6 +36,10 @@ def handle_client(conn, addr):
                 case "dir":
                     for dir in os.listdir(SERVER_STORAGE_DIR):
                         conn.send(dir.encode())
+                case "handle":
+                    handle = args
+                    connected_clients[conn]["handle"] = handle
+                    conn.send(f"Welcome {handle}!".encode())
         except Exception as e:
             print(f"[ERROR] {addr}: {e}")
             break

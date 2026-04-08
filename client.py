@@ -85,6 +85,11 @@ def start_client():
                     print("Connection closed. Thank you!")
                 case "/dir":
                     client_socket.send("dir".encode())
+                case "/register":
+                    if len(input_split) != 2:
+                        print("Error: Syntax is /regular <handle>")
+                    else:
+                        client_socket.send(f"handle {input_split[1]}".encode())
         except KeyboardInterrupt:
             if connected:
                 client_socket.send("disconnect".encode())
