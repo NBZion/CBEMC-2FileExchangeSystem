@@ -78,6 +78,11 @@ def start_client():
                         receive_thread.start()
                     except Exception as e:
                         print(f"Error connecting to server: {e}")
+                case "/leave":
+                    client_socket.send("disconnect".encode())
+                    connected = False
+                    client_socket.close()
+                    print("Connection closed. Thank you!")
         except KeyboardInterrupt:
             if connected:
                 client_socket.send("disconnect".encode())
