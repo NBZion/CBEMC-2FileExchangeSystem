@@ -68,6 +68,30 @@ def handle_client(conn, addr):
                     success = f"{handle}<{timestamp}>: Uploaded {filename}"
                     print(success)
                     conn.send(f"msg {success}".encode())
+                case "get":
+                    filename = mSplit[1]
+                    filepath = os.path.join(SERVER_STORAGE_DIR, filename)
+
+                    if not os.path.exists(filepath):
+                        conn.send("msg Error: File not found on server".encode())
+                    else:
+                        filesize = os.path.getsize(filepath)
+
+                        conn.send(f"get_incoming {filename} {filesize}".encode())
+
+                        ack = conn.recv(1024).decode().strip()
+
+                        if ack == "get_ack":
+                            with open(filepath, "rb") as f:
+                                conn.sendall(f.read())
+
+                    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    handle = connected_clients[conn]["handle"]
+
+                    if not handle:
+                        handle = "Unknown"
+
+                    print(f"<{timestamp}>:Sent {filename} to {handle}")
 
         except Exception as e:
             print(f"[ERROR] {addr}: {e}")

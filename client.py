@@ -39,6 +39,25 @@ def receive_messages():
                         print(msgSplit[i])
                 case "store_ack":
                     store_ack_event.set()
+                case "get_incoming":
+                    filename = msgSplit[1]
+                    filesize = int(msgSplit[2])
+
+                    client_socket.send("get_ack".encode())
+
+                    filepath = os.path.join(CLIENT_STORAGE_DIR, filename)
+                    with open(filepath, "wb") as f:
+                        bytes_received = 0
+                        while bytes_received < filesize:
+                            chunk = client_socket.recv(
+                                min(4096, filesize - bytes_received)
+                            )
+                            if not chunk:
+                                break
+                            f.write(chunk)
+                            bytes_received += len(chunk)
+
+                    print(f"\nFile received from Server: {filename}")
 
             # Fix CLI problem with multithreading
             sys.stdout.write("\033[2K\r")
@@ -154,6 +173,16 @@ def start_client():
                     print("--- Client Directory ---")
                     for dir in os.listdir(CLIENT_STORAGE_DIR):
                         print(dir)
+                case "/get":
+                    if not connected:
+                        print("Error: Not Connected")
+                        continue
+                    if len(input_split) != 2:
+                        print("Error: Syntax is /store <filename>")
+                        continue
+
+                    filename = input_split[1]
+                    client_socket.send(f"get {filename}".encode())
 
         except KeyboardInterrupt:
             if connected:
