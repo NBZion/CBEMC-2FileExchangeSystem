@@ -72,7 +72,12 @@ def start_client():
                     print("/leave                       : Disconnect from server")
                     print("/register <handle>           : Register alias")
                     print("/store <filename>            : Send file to server")
-                    print("/dir                         : Request directory list")
+                    print(
+                        "/dir                         : Request directory list of Server"
+                    )
+                    print(
+                        "/cdir                           : Get Directory List of Client"
+                    )
                     print("/get <filename>              : Fetch file from server")
                     print("--------------------\n")
                     continue
@@ -145,6 +150,10 @@ def start_client():
                             client_socket.sendall(f.read())
                     else:
                         print("Error: Server timed out. Could not upload file ")
+                case "/cdir":
+                    print("--- Client Directory ---")
+                    for dir in os.listdir(CLIENT_STORAGE_DIR):
+                        print(dir)
 
         except KeyboardInterrupt:
             if connected:
