@@ -128,8 +128,14 @@ def start_server():
     except KeyboardInterrupt:
         print("\n[SHUTDOWN] Keyboard Interrupt received. Shutting down server")
     finally:
+        try:
+            for client_conn in list(connected_clients.keys()):
+                client_conn.close()
+        except Exception as e:
+            print(f"[Error] Failed to close a client connection {e}")
         server.close()
         print("[SHUTDOWN] Server shutdown succesfully")
+        os._exit(0)
 
 
 if __name__ == "__main__":

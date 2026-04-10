@@ -19,6 +19,10 @@ def receive_messages():
             if not message:
                 print("\n[SERVER DISCONNECTED]")
                 connected = False
+                sys.stdout.write("\033[2K\r")
+
+                sys.stdout.write(">> ")
+                sys.stdout.flush()
                 break
 
             msgSplit = message.split(" ")
