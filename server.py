@@ -79,6 +79,7 @@ def handle_client(conn, addr):
 
                     if not os.path.exists(filepath):
                         conn.send("msg Error: File not found on server".encode())
+                        continue
                     else:
                         filesize = os.path.getsize(filepath)
 
