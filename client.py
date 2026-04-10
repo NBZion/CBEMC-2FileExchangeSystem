@@ -88,15 +88,24 @@ def start_client():
                     except Exception as e:
                         print(f"Error connecting to server: {e}")
                 case "/leave":
+                    if not connected:
+                        print("Error: Not Connected")
+                        continue
                     client_socket.send("disconnect".encode())
                     connected = False
                     client_socket.close()
                     print("Connection closed. Thank you!")
                 case "/dir":
+                    if not connected:
+                        print("Error: Not Connected")
+                        continue
                     client_socket.send("dir".encode())
                 case "/register":
                     if len(input_split) != 2:
                         print("Error: Syntax is /regular <handle>")
+                    if not connected:
+                        print("Error: Not Connected")
+                        continue
                     else:
                         client_socket.send(f"handle {input_split[1]}".encode())
         except KeyboardInterrupt:
