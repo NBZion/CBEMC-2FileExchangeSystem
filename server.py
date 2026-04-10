@@ -34,8 +34,11 @@ def handle_client(conn, addr):
                     conn.send("disconnect success".encode())
                     connected = False
                 case "dir":
+                    dirCombined = ""
                     for dir in os.listdir(SERVER_STORAGE_DIR):
-                        conn.send(dir.encode())
+                        dirCombined = dirCombined + " " + dir
+
+                    conn.send(f"dir {dirCombined}".encode())
                 case "handle":
                     handle = args
                     connected_clients[conn]["handle"] = handle

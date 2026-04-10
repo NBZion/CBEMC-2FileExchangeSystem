@@ -18,10 +18,19 @@ def receive_messages():
                 connected = False
                 break
 
+            msgSplit = message.split(" ")
+            command = msgSplit[0]
+
+            #            print(f"\n{message}")
+
+            match command:
+                case "dir":
+                    print("\n--- Server Directory ---")
+                    for i in range(1, len(msgSplit)):
+                        print(msgSplit[i])
+
             # Fix CLI problem with multithreading
             sys.stdout.write("\033[2K\r")
-
-            print(f"\n{message}")
 
             sys.stdout.write(">> ")
             sys.stdout.flush()
