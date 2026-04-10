@@ -116,13 +116,19 @@ def start_server():
     server.bind((HOST, PORT))
     server.listen()
 
-    while True:
-        # Wait for Clients
-        conn, addr = server.accept()
+    try:
+        while True:
+            # Wait for Clients
+            conn, addr = server.accept()
 
-        thread = threading.Thread(target=handle_client, args=(conn, addr))
-        thread.start()
-        print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
+            thread = threading.Thread(target=handle_client, args=(conn, addr))
+            thread.start()
+            print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
+    except KeyboardInterrupt:
+        print("\n[SHUTDOWN] Keyboard Interrupt received. Shutting down server")
+    finally:
+        server.close()
+        print("[SHUTDOWN] Server shutdown succesfully")
 
 
 if __name__ == "__main__":
