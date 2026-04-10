@@ -43,6 +43,31 @@ def handle_client(conn, addr):
                     handle = args
                     connected_clients[conn]["handle"] = handle
                     conn.send(f"Welcome {handle}!".encode())
+                case "store":
+                    filename = mSplit[1]
+                    filesize = int(mSplit[2])
+
+                    conn.send("store_ack".encode())
+
+                    filepath = os.path.join(SERVER_STORAGE_DIR, filename)
+                    with open(filepath, "wb") as f:
+                        bytes_received = 0
+                        while bytes_received < filesize:
+                            chunk = conn.recv(min(4096, filesize - bytes_received))
+                            if not chunk:
+                                break
+
+                            f.write(chunk)
+                            bytes_received += len(chunk)
+
+                    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    handle = connected_clients[conn]["handle"]
+                    if not handle:
+                        handle = "Unknown"
+
+                    success = f"{handle}<{timestamp}>: Uploaded {filename}"
+                    conn.send(f"msg {success}".encode())
+
         except Exception as e:
             print(f"[ERROR] {addr}: {e}")
             break

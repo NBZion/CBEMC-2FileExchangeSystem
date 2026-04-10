@@ -8,6 +8,9 @@ connected = False
 CLIENT_STORAGE_DIR = "ClientStorage/"
 
 
+store_ack_event = threading.Event()
+
+
 def receive_messages():
     global connected
     while connected:
@@ -24,10 +27,18 @@ def receive_messages():
             #            print(f"\n{message}")
 
             match command:
+                case "msg":
+                    rcvMsg = ""
+                    for i in range(1, len(msgSplit)):
+                        rcvMsg = rcvMsg + msgSplit[i]
+
+                    print("\n" + rcvMsg)
                 case "dir":
                     print("\n--- Server Directory ---")
                     for i in range(1, len(msgSplit)):
                         print(msgSplit[i])
+                case "store_ack":
+                    store_ack_event.set()
 
             # Fix CLI problem with multithreading
             sys.stdout.write("\033[2K\r")
@@ -108,6 +119,33 @@ def start_client():
                         continue
                     else:
                         client_socket.send(f"handle {input_split[1]}".encode())
+                case "/store":
+                    if not connected:
+                        print("Error: Not Connected")
+                        continue
+                    if len(input_split) != 2:
+                        print("Error: Syntax is /store <filename>")
+                        continue
+
+                    filename = input_split[1]
+                    filepath = os.path.join(CLIENT_STORAGE_DIR, filename)
+                    if not os.path.exists(filepath):
+                        print(
+                            f"Error: File '{filename}' not in Client Storage Directory"
+                        )
+                        continue
+
+                    filesize = os.path.getsize(filepath)
+                    store_ack_event.clear()
+
+                    client_socket.send(f"store {filename} {filesize}".encode())
+
+                    if store_ack_event.wait(timeout=5):
+                        with open(filepath, "rb") as f:
+                            client_socket.sendall(f.read())
+                    else:
+                        print("Error: Server timed out. Could not upload file ")
+
         except KeyboardInterrupt:
             if connected:
                 client_socket.send("disconnect".encode())
