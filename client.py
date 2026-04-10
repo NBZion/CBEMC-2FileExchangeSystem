@@ -139,7 +139,7 @@ def start_client():
                     client_socket.send("dir".encode())
                 case "/register":
                     if len(input_split) != 2:
-                        print("Error: Syntax is /regular <handle>")
+                        print("Error: Syntax is /register <handle>")
                     if not connected:
                         print("Error: Not Connected")
                         continue
@@ -180,7 +180,7 @@ def start_client():
                         print("Error: Not Connected")
                         continue
                     if len(input_split) != 2:
-                        print("Error: Syntax is /store <filename>")
+                        print("Error: Syntax is /get <filename>")
                         continue
 
                     filename = input_split[1]
