@@ -30,7 +30,7 @@ def receive_messages():
                 case "msg":
                     rcvMsg = ""
                     for i in range(1, len(msgSplit)):
-                        rcvMsg = rcvMsg + msgSplit[i]
+                        rcvMsg = rcvMsg + " " + msgSplit[i]
 
                     print("\n" + rcvMsg)
                 case "dir":
@@ -97,7 +97,7 @@ def start_client():
                         "/dir                         : Request directory list of Server"
                     )
                     print(
-                        "/cdir                           : Get Directory List of Client"
+                        "/cdir                         : Get Directory List of Client"
                     )
                     print("/get <filename>              : Fetch file from server")
                     print("--------------------\n")

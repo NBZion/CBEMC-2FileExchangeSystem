@@ -29,6 +29,11 @@ def handle_client(conn, addr):
             command = mSplit[0]
             args = mSplit[1] if len(mSplit) > 1 else ""
 
+            if command in ["dir", "store", "get"]:
+                if not connected_clients[conn]["handle"]:
+                    conn.send("msg Error: You must register first.".encode())
+                    continue
+
             match command:
                 case "disconnect":
                     conn.send("disconnect success".encode())
@@ -42,7 +47,7 @@ def handle_client(conn, addr):
                 case "handle":
                     handle = args
                     connected_clients[conn]["handle"] = handle
-                    conn.send(f"Welcome {handle}!".encode())
+                    conn.send(f"msg Welcome {handle}!".encode())
                 case "store":
                     filename = mSplit[1]
                     filesize = int(mSplit[2])
