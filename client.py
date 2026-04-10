@@ -119,6 +119,7 @@ def start_client():
                         client_socket.connect((ip, port))
                         connected = True
 
+                        print("Connection to the File Exchange Server is successful!")
                         receive_thread = threading.Thread(target=receive_messages)
                         receive_thread.daemon = True
                         receive_thread.start()
