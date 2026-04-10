@@ -66,6 +66,7 @@ def handle_client(conn, addr):
                         handle = "Unknown"
 
                     success = f"{handle}<{timestamp}>: Uploaded {filename}"
+                    print(success)
                     conn.send(f"msg {success}".encode())
 
         except Exception as e:
