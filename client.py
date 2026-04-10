@@ -141,6 +141,7 @@ def start_client():
                 case "/register":
                     if len(input_split) != 2:
                         print("Error: Syntax is /register <handle>")
+                        continue
                     if not connected:
                         print("Error: Not Connected")
                         continue
