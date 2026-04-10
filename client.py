@@ -185,6 +185,8 @@ def start_client():
 
                     filename = input_split[1]
                     client_socket.send(f"get {filename}".encode())
+                case _:
+                    print("Error: Invalid Command")
 
         except KeyboardInterrupt:
             if connected:
