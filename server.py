@@ -105,6 +105,8 @@ def handle_client(conn, addr):
 
 
 def start_server():
+    if not os.path.exists(SERVER_STORAGE_DIR):
+        os.mkdir("ServerStorage")
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((HOST, PORT))
     server.listen()

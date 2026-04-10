@@ -75,6 +75,8 @@ def receive_messages():
 def start_client():
     global client_socket, connected
 
+    if not os.path.exists(CLIENT_STORAGE_DIR):
+        os.mkdir("ClientStorage")
     while True:
         try:
             user_input = input(">> ").strip()
